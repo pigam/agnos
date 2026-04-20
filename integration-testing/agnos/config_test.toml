@@ -51,3 +51,10 @@ domains = ["ecdsa.agnos.test"]
 fullchain_output_file = "fullchain_ecdsa.pem"
 key_output_file = "cert_key_ecdsa.pem"
 key_type = "ecdsa_p256"
+
+# Certificate used to test key_type change detection
+[[accounts.certificates]]
+domains = ["key-change.agnos.test"]
+fullchain_output_file = "fullchain_key_change.pem"
+key_output_file = "cert_key_change.pem"
+key_type = "rsa_2048"
