@@ -28,6 +28,17 @@ pub struct Account {
     pub certificates: Vec<Certificate>,
 }
 
+/// Key type to use when generating a certificate private key
+#[derive(Debug, Deserialize, Default, Clone, Copy)]
+#[serde(rename_all = "snake_case")]
+pub enum CertKeyType {
+    #[default]
+    EcdsaP256,
+    Rsa2048,
+    Rsa3072,
+    Rsa4096,
+}
+
 /// Config item representing an ACME certificate
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -39,6 +50,8 @@ pub struct Certificate {
     pub key_output_file: PathBuf,
     #[serde(default)]
     pub reuse_private_key: bool,
+    #[serde(default)]
+    pub key_type: CertKeyType,
 }
 
 const fn default_days() -> u32 {

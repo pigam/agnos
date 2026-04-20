@@ -19,6 +19,18 @@ use crate::barrier::Barrier;
 use crate::config;
 use crate::dns::DnsChallenges;
 
+fn generate_private_key(
+    key_type: config::CertKeyType,
+) -> anyhow::Result<PKey<openssl::pkey::Private>> {
+    use config::CertKeyType;
+    Ok(match key_type {
+        CertKeyType::EcdsaP256 => acme2::gen_ec_p256_private_key()?,
+        CertKeyType::Rsa2048 => acme2::gen_rsa_private_key(2048)?,
+        CertKeyType::Rsa3072 => acme2::gen_rsa_private_key(3072)?,
+        CertKeyType::Rsa4096 => acme2::gen_rsa_private_key(4096)?,
+    })
+}
+
 pub fn create_restricted_file<T>(path: impl AsRef<std::path::Path>) -> anyhow::Result<T>
 where
     std::fs::File: Into<T>,
@@ -288,7 +300,7 @@ pub async fn process_config_certificate(
                 (pkey, pkey_pem, true)
             }
             None => {
-                let pkey = acme2::gen_ec_p256_private_key()?;
+                let pkey = generate_private_key(config_cert.key_type)?;
                 let pem = pkey.private_key_to_pem_pkcs8()?;
                 (pkey, pem, false)
             }
