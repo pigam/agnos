@@ -34,8 +34,11 @@ pub struct Account {
 pub enum CertKeyType {
     #[default]
     EcdsaP256,
+    #[serde(rename = "rsa_2048")]
     Rsa2048,
+    #[serde(rename = "rsa_3072")]
     Rsa3072,
+    #[serde(rename = "rsa_4096")]
     Rsa4096,
 }
 
